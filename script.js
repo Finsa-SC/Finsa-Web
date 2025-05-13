@@ -1,11 +1,88 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Portfolio Carousel Auto Scroll
-    const portfolioTrack = document.querySelector('.portfolio-track');
-    const portfolioItems = document.querySelectorAll('.portfolio-item');
+document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.querySelector('.certificate-wrapper');
-    const cards = Array.from(wrapper.children);
+    let cards = Array.from(document.querySelectorAll('.certificate-card'));
     const prevBtn = document.getElementById('prevCert');
     const nextBtn = document.getElementById('nextCert');
+  
+    const langLogos = [
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visualbasic/visualbasic-plain.svg"
+    ];
+    
+    const dbmsLogos = [
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg"
+    ];
+    
+    const toolLogos = [
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visualstudio/visualstudio-plain.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pycharm/pycharm-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ubuntu/ubuntu-plain.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cmake/cmake-original.svg",
+      "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/swagger.svg",
+      "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/gradle.svg",
+      "https://imgs.search.brave.com/w92ztcB4TXAzAHz5tr510uIruDWPPNnaLYMgE67td6Y/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/YnJhbmRmZXRjaC5p/by9pZHJSRG1aMl9G/L3cvNDAwL2gvNDAw/L3RoZW1lL2Rhcmsv/aWNvbi5qcGVnP2M9/MWJ4aWQ2NE11cDdh/Y3pld1NBWU1YJnQ9/MTc0MDA1MzQ1OTk0/Mw",
+      "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/jupyter.svg",
+      "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/googlecolab.svg",
+    ];
+    
+    
+    let langIndex = 0;
+    let dbmsIndex = 0;
+    let toolIndex = 0;
+    
+    setInterval(() => {
+      const langLogo = document.getElementById("lang-logo");
+      langLogo.style.opacity = 0;
+      setTimeout(() => {
+        langIndex = (langIndex + 1) % langLogos.length;
+        langLogo.src = langLogos[langIndex];
+        langLogo.style.opacity = 1;
+      }, 500);
+    }, 3000);
+    
+    setInterval(() => {
+      const dbmsLogo = document.getElementById("dbms-logo");
+      dbmsLogo.style.opacity = 0;
+      setTimeout(() => {
+        dbmsIndex = (dbmsIndex + 1) % dbmsLogos.length;
+        dbmsLogo.src = dbmsLogos[dbmsIndex];
+        dbmsLogo.style.opacity = 1;
+      }, 500);
+    }, 3000);
+
+    setInterval(() => {
+      const toolLogo = document.getElementById("tool-logo");
+      toolLogo.style.opacity = 0;
+      setTimeout(() => {
+        toolIndex = (toolIndex + 1) % toolLogos.length;
+        toolLogo.src = toolLogos[toolIndex];
+        toolLogo.style.opacity = 1;
+      }, 500);
+    }, 3000);
+    
+    
+    
+    // Cloning first & last
+    const firstClone = cards[0].cloneNode(true);
+    const lastClone = cards[cards.length - 1].cloneNode(true);
+    wrapper.appendChild(firstClone);
+    wrapper.insertBefore(lastClone, cards[0]);
+  
+    cards = Array.from(document.querySelectorAll('.certificate-card')); // refresh
+    let index = 1;
+
     const audio = document.getElementById('bg-music');
     const btn = document.getElementById('play-music-btn');
 
@@ -17,76 +94,42 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Playback error:", err);
         });
     });
-
-    let currentIndex = 0;
-
-    function updateCarousel() {
-        cards.forEach((card, index) => {
-            card.classList.remove('active', 'left', 'right');
-            card.style.transform = 'scale(0.8)';
-            card.style.opacity = '0.3';
-            card.style.zIndex = 1;
-
-            if (index === currentIndex) {
-                card.classList.add('active');
-                card.style.transform = 'scale(1)';
-                card.style.opacity = '1';
-                card.style.zIndex = 3;
-            } else if (index === currentIndex - 1 || (currentIndex === 0 && index === cards.length - 1)) {
-                card.classList.add('left');
-                card.style.zIndex = 2;
-            } else if (index === currentIndex + 1 || (currentIndex === cards.length - 1 && index === 0)) {
-                card.classList.add('right');
-                card.style.zIndex = 2;
-            }
-        });
-
-        // Scroll to center
-        const container = document.querySelector('.certificate-container');
-        const activeCard = cards[currentIndex];
-        const offset = activeCard.offsetLeft - (container.offsetWidth / 2 - activeCard.offsetWidth / 2);
-        wrapper.style.transform = `translateX(-${offset}px)`;
+  
+    function scrollToCenter(animated = true) {
+      const container = document.querySelector('.certificate-container');
+      const card = cards[index];
+      const offset = card.offsetLeft - (container.offsetWidth / 2 - card.offsetWidth / 2);
+      wrapper.style.transition = animated ? 'transform 0.5s ease' : 'none';
+      wrapper.style.transform = `translateX(-${offset}px)`;
+  
+      cards.forEach((c, i) => c.classList.toggle('active', i === index));
     }
-
-    prevBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-        updateCarousel();
-    });
-
+  
     nextBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % cards.length;
-        updateCarousel();
+      if (index < cards.length - 1) {
+        index++;
+        scrollToCenter();
+      }
     });
-
-    window.addEventListener('resize', updateCarousel);
-    updateCarousel();
-    
-    if (portfolioTrack && portfolioItems.length > 0) {
-        // Clone items for continuous scrolling
-        portfolioItems.forEach(item => {
-            const clone = item.cloneNode(true);
-            portfolioTrack.appendChild(clone);
-        });
-        
-        // Calculate total width
-        const itemWidth = portfolioItems[0].offsetWidth + 
-                          parseInt(window.getComputedStyle(portfolioItems[0]).marginLeft) + 
-                          parseInt(window.getComputedStyle(portfolioItems[0]).marginRight);
-        const totalWidth = itemWidth * portfolioItems.length;
-
-        // Set initial position
-        portfolioTrack.style.transform = `translateX(-${itemWidth}px)`;
-
-        // Auto scroll
-        let scrollPosition = 0;
-        const totalScrollWidth = itemWidth * portfolioItems.length;
-
-        const scrollInterval = setInterval(() => {
-            scrollPosition += 1;
-            if (scrollPosition >= totalScrollWidth) {
-                scrollPosition = 0;
-            }
-            portfolioTrack.style.transform = `translateX(-${scrollPosition}px)`;
-        }, 16);
-    }
-});
+  
+    prevBtn.addEventListener('click', () => {
+      if (index > 0) {
+        index--;
+        scrollToCenter();
+      }
+    });
+  
+    wrapper.addEventListener('transitionend', () => {
+      if (cards[index].isSameNode(firstClone)) {
+        index = 1;
+        scrollToCenter(false);
+      } else if (cards[index].isSameNode(lastClone)) {
+        index = cards.length - 2;
+        scrollToCenter(false);
+      }
+    });
+  
+    // Initial scroll
+    scrollToCenter(false);
+  });
+  
